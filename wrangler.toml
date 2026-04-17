@@ -1,5 +1,5 @@
 name = "tip-marketplace-infoman"
-main = "src/index.js" # Change to "index.js" if your file is in the root
+main = "app.js"
 compatibility_date = "2024-04-03"
 
 [[d1_databases]]
