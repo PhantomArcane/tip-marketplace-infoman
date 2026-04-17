@@ -472,7 +472,7 @@ function setupUploadForm() {
       e.preventDefault();
       const session = getSession();
       if (!session || session.isAdmin) { showToast('Only students can list items.', 'error'); return; }
-      await DB.createProduct({
+      const res = await DB.createProduct({
         title:       $('product-title').value.trim(),
         description: $('product-desc').value.trim(),
         price:       $('product-price').value,
@@ -482,6 +482,10 @@ function setupUploadForm() {
         sellerId:    session.id,
         sellerName:  session.name,
       });
+      if (res && res.error) {
+        showToast('Error: ' + res.error, 'error');
+        return;
+      }
       form.reset();
       if (preview) { preview.classList.remove('visible'); preview.src = ''; }
       if (zone) {

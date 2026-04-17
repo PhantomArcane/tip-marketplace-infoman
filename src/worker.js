@@ -44,7 +44,7 @@ export default {
         const createdAt = new Date().toISOString();
         await env.DB.prepare(
           "INSERT INTO products (id, title, description, price, category, image, condition, sellerId, sellerName, createdAt, views) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-        ).bind(id, body.title, body.description || '', body.price, body.category, body.image || '', body.condition || 'Good', body.sellerId, body.sellerName, createdAt, 0).run();
+        ).bind(id, body.title, body.description || '', Number(body.price), body.category, body.image || '', body.condition || 'Good', body.sellerId, body.sellerName, createdAt, 0).run();
         return Response.json({ id, ...body, createdAt, views: 0 }, { headers });
       }
 
