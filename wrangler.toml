@@ -1,6 +1,9 @@
 name = "tip-marketplace-infoman"
-main = "app.js"
+main = "src/worker.js"
 compatibility_date = "2024-04-03"
+
+[assets]
+directory = "public"
 
 [[d1_databases]]
 binding = "DB"
