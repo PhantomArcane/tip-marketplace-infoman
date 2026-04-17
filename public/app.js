@@ -11,32 +11,6 @@ const DB_KEYS = {
 
 const ADMIN_CREDENTIALS = { username: 'admin', password: 'admin123' };
 
-const BOT_RESPONSES = {
-  'Maria Santos': [
-    'Hi! Yes, I can meet you at the TIP Canteen at 3 PM today. 😊',
-    'Sure! The item is still available. Can we meet tomorrow after class?',
-    'Of course! I\'ll bring it to the Library lobby at 1 PM. Is that okay?',
-    'Great! It\'s in perfect condition. Let\'s meet at the Engineering building entrance.',
-  ],
-  'Juan Dela Cruz': [
-    'Hey! Yeah it\'s still available. I\'m usually near the CS lab after 2 PM.',
-    'Sure! We can meet at the TIP parking area. I\'m free on Friday afternoon.',
-    'Hi! I can drop the price a little if you\'re buying today. 😄',
-    'Yes! Come find me at Room 404 after my last class around 5 PM.',
-  ],
-  'Ana Reyes': [
-    'Hello! Yes it\'s still for sale. Can we meet at the TIP Oval?',
-    'Hi! I\'m available on weekdays after 3 PM near the Admin building.',
-    'Sure thing! The condition is exactly as described, almost brand new!',
-    'Of course! You can inspect it first before paying. See you at the canteen!',
-  ],
-  default: [
-    'Hi there! Yes, the item is still available. 😊',
-    'Thanks for your interest! I\'m free on campus most weekdays.',
-    'Sure! We can meet at the TIP Canteen. What time works for you?',
-    'Hello! Let me know a convenient time and place to meet on campus.',
-  ],
-};
 
 /* ════════════════════════════════════════════════════════════════
    2. DB — API Layer
@@ -170,7 +144,7 @@ let activeSort     = 'newest';
 let searchQuery    = '';
 let activeChatId   = null;
 let isAdmin        = false;
-let botTypingTimer = null;
+
 
 /* ════════════════════════════════════════════════════════════════
    5. HELPERS
@@ -667,28 +641,8 @@ async function sendMessage() {
   await DB.sendMessage({ senderId: session.id, senderName: session.name, receiverId: activeChatId, receiverName, text });
   input.value = '';
   await openThread(activeChatId, receiverName);
-  triggerBotResponse(activeChatId, receiverName, session);
 }
 
-function triggerBotResponse(sellerId, sellerName, session) {
-  if (botTypingTimer) { clearTimeout(botTypingTimer); botTypingTimer = null; }
-  const messagesEl = $('chat-messages');
-  const typingEl = document.createElement('div');
-  typingEl.className = 'typing-indicator';
-  typingEl.id = 'typing-indicator';
-  typingEl.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
-  messagesEl.appendChild(typingEl);
-  messagesEl.scrollTop = messagesEl.scrollHeight;
-  const delay = 2500 + Math.random() * 1500;
-  botTypingTimer = setTimeout(async () => {
-    document.getElementById('typing-indicator')?.remove();
-    const responses = BOT_RESPONSES[sellerName] || BOT_RESPONSES.default;
-    const reply = responses[Math.floor(Math.random() * responses.length)];
-    await DB.sendMessage({ senderId: sellerId, senderName: sellerName, receiverId: session.id, receiverName: session.name, text: reply });
-    openThread(sellerId, sellerName);
-    botTypingTimer = null;
-  }, delay);
-}
 
 /* ════════════════════════════════════════════════════════════════
    13. PROFILE PAGE
