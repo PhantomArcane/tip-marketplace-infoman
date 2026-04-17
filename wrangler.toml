@@ -1,0 +1,8 @@
+name = "tip-marketplace-infoman"
+main = "src/index.js" # Change to "index.js" if your file is in the root
+compatibility_date = "2024-04-03"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "tipmarketplace"
+database_id = "6c5cf2ee-0013-41cd-882a-2b45326ed36b"
