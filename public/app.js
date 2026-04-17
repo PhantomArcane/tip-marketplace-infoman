@@ -447,10 +447,26 @@ function setupUploadForm() {
       if (file.size > 5 * 1024 * 1024) { showToast('Image too large (max 5MB).', 'error'); return; }
       const reader = new FileReader();
       reader.onload = e => {
-        preview.src = e.target.result;
-        preview.classList.add('visible');
-        zone.querySelector('.upload-icon').style.display = 'none';
-        zone.querySelector('.upload-text').textContent = file.name;
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          let w = img.width, h = img.height;
+          const max_size = 800;
+          if (w > max_size || h > max_size) {
+            if (w > h) { h *= max_size/w; w = max_size; }
+            else { w *= max_size/h; h = max_size; }
+          }
+          canvas.width = w; canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, w, h);
+          const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
+          
+          preview.src = compressedBase64;
+          preview.classList.add('visible');
+          zone.querySelector('.upload-icon').style.display = 'none';
+          zone.querySelector('.upload-text').textContent = file.name;
+        };
+        img.src = e.target.result;
       };
       reader.readAsDataURL(file);
     });
